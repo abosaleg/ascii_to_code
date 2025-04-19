@@ -1,0 +1,215 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>Generate C++ Code</title>
+  <script src="https://kit.fontawesome.com/a076d05399.js" crossorigin="anonymous"></script>
+  <style>
+    body {
+      font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+      margin: 0;
+      padding: 20px;
+      background-color: #f9f9f9;
+      color: #333;
+    }
+
+    .banner {
+      background-color: #2ecc71;
+      color: white;
+      padding: 20px;
+      text-align: center;
+      font-size: 20px;
+      font-weight: bold;
+      border-radius: 10px;
+      margin-bottom: 30px;
+    }
+
+    .container {
+      max-width: 600px;
+      margin: 0 auto;
+      background: #fff;
+      padding: 25px;
+      border-radius: 10px;
+      box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1);
+    }
+
+    h2 {
+      text-align: center;
+      margin-bottom: 20px;
+      color: #2c3e50;
+    }
+
+    label {
+      font-weight: bold;
+      display: block;
+      margin-top: 15px;
+    }
+
+    input, textarea, button {
+      width: 100%;
+      padding: 12px;
+      margin-top: 5px;
+      border-radius: 6px;
+      border: 1px solid #ccc;
+      font-size: 14px;
+      box-sizing: border-box;
+    }
+
+    textarea {
+      resize: vertical;
+      height: 150px;
+    }
+
+    button {
+      background-color: #3498db;
+      color: white;
+      font-weight: bold;
+      border: none;
+      margin-top: 15px;
+      transition: background-color 0.3s ease;
+    }
+
+    button:hover {
+      background-color: #2980b9;
+    }
+
+    #output {
+      white-space: pre-wrap;
+      background-color: #eef2f3;
+      padding: 15px;
+      border: 1px solid #ccc;
+      border-radius: 6px;
+      margin-top: 20px;
+      font-family: monospace;
+    }
+
+    .instructions {
+      background-color: #fcfcfc;
+      border-left: 5px solid #3498db;
+      padding: 15px;
+      margin-bottom: 30px;
+      border-radius: 6px;
+      font-size: 14px;
+      line-height: 1.6;
+    }
+
+    ul {
+      padding-left: 20px;
+    }
+
+    .contact {
+      margin-top: 20px;
+      font-size: 15px;
+    }
+
+    .contact a {
+      color: #25D366;
+      text-decoration: none;
+      margin-left: 10px;
+      font-size: 18px;
+    }
+
+    .contact span {
+      display: inline-block;
+      margin-top: 8px;
+    }
+  </style>
+</head>
+<body>
+
+  <div class="banner">
+    This tool was proudly built by Ahmed Salah and Borham<br>
+    Specifically made for MSA students taking Programming 2 this semester 💻🔥
+  </div>
+
+  <div class="container">
+
+    <div class="instructions">
+      <h3>Instructions:</h3>
+      <ul>
+        <li>Fill in the array name, row variable name, and column variable name.</li>
+        <li>Enter your ASCII art line by line in the text area.</li>
+        <li>Click the "Generate Code" button to convert the ASCII art into C++ assignment lines.</li>
+        <li>Click "Copy Code" to copy the generated C++ code to your clipboard.</li>
+      </ul>
+      <!-- <p><strong>Note:</strong> Empty spaces will be ignored. Special characters like <code>\</code> and <code>'</code> will be escaped automatically.</p> -->
+      <div class="contact">
+        <h4>Contact Us:</h4>
+        <span>
+          Ahmed Salah: +20 111 361 3521
+          <a href="https://wa.me/201113613521" target="_blank" title="Chat with Ahmed on WhatsApp">
+            <i class="fab fa-whatsapp"></i>
+          </a>
+        </span>
+        <br/>
+        <span>
+          Borham: +20 12 85183907
+          <a href="https://wa.me/201285183907" target="_blank" title="Chat with Borham on WhatsApp">
+            <i class="fab fa-whatsapp"></i>
+          </a>
+        </span>
+      </div>
+    </div>
+
+    <h2>Generate C++ Code from ASCII Art</h2>
+
+    <label for="arrayName">Array Name:</label>
+    <input type="text" id="arrayName" placeholder="e.g., x" required />
+
+    <label for="varX">Row Variable Name:</label>
+    <input type="text" id="varX" placeholder="e.g., R_hero" required />
+
+    <label for="varY">Column Variable Name:</label>
+    <input type="text" id="varY" placeholder="e.g., c_hero" required />
+
+    <label for="artLines">ASCII Art:</label>
+    <textarea id="artLines" placeholder="Enter your ASCII art here..."></textarea>
+
+    <button onclick="generateCode()">Generate Code</button>
+
+    <div id="output"></div>
+
+    <button id="copyButton" style="display:none;" onclick="copyCode()">Copy Code</button>
+
+  </div>
+
+  <script>
+    function generateCode() {
+      const arrayName = document.getElementById("arrayName").value.trim();
+      const varX = document.getElementById("varX").value.trim();
+      const varY = document.getElementById("varY").value.trim();
+      const artText = document.getElementById("artLines").value.trim();
+
+      if (!arrayName || !varX || !varY || !artText) {
+        alert("Please fill in all fields and ASCII art.");
+        return;
+      }
+
+      const artLines = artText.split("\n");
+      const numRows = artLines.length;
+
+      let output = "";
+      for (let i = 0; i < numRows; i++) {
+        const line = artLines[i];
+        for (let j = 0; j < line.length; j++) {
+          const ch = line[j];
+          if (ch === ' ') continue;
+
+          output += `${arrayName}[${varX} - ${numRows - i - 1}][${varY} + ${j}] = '${(ch === '\\' || ch === "'") ? '\\' + ch : ch}';\n`;
+        }
+      }
+
+      document.getElementById("output").textContent = output;
+      document.getElementById("copyButton").style.display = "block";
+    }
+
+    function copyCode() {
+      const output = document.getElementById("output").textContent;
+      navigator.clipboard.writeText(output)
+        .then(() => alert("Code copied to clipboard!"))
+        .catch(err => alert("Failed to copy: " + err));
+    }
+  </script>
+</body>
+</html>
